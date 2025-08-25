@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
-from quiz import calculate_scores, nearest_neighbor, nearest_neighbor_cosine, questions, description
+from .quiz import calculate_scores, nearest_neighbor, nearest_neighbor_cosine, questions, description
+from pathlib import Path
 import os
 
 app = Flask(__name__)
@@ -7,7 +8,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     """Render the main quiz page"""
-    return render_template('index.html', questions=questions())
+    return render_template("index.html", questions=questions())
 
 @app.route('/submit', methods=['POST'])
 def submit_quiz():
@@ -70,7 +71,8 @@ def submit_quiz():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-if __name__ == '__main__':
+
+def main():
     # Create templates directory if it doesn't exist
     os.makedirs('templates', exist_ok=True)
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=8000)
