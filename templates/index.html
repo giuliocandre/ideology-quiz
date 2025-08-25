@@ -275,7 +275,7 @@
     <div class="container">
         <div class="header">
             <h1>Quick Ideology Quiz</h1>
-            <p>Answer 10 questions to discover your political ideology</p>
+            <p>Discover your political ideology in <b>under 1 minute</b>! (10 questions)</p>
         </div>
 
         <div class="quiz-container">
@@ -286,7 +286,10 @@
                     <div class="question-text">{{ question }}</div>
                     <div class="rating-container">
                         <div class="rating-labels">
-                            <span>Agree from 1 to 5</span>
+                            <span>1 = Strongly Disagree</span>
+                        </div>
+                        <div class="rating-labels">
+                            <span>5 = Strongly Agree</span>
                         </div>
                         <div class="rating-inputs">
                             {% for j in range(1, 6) %}
