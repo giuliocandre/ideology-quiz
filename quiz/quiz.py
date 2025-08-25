@@ -1,7 +1,10 @@
 # ideology_quiz_vector.py
 import math
+from typing import Dict, List, Tuple
 
-def calculate_scores(answers):
+question_weights = [5, 2, 2, 2, 4, 4, 3, 3, 4, 5]
+
+def calculate_scores(answers: List[int]) -> Dict[str, List[int]]:
     """
     answers: list of 10 integers (0–5)
     returns: dictionary with ideology scores (weighted sums)
@@ -21,7 +24,7 @@ def calculate_scores(answers):
 
     return weights
 
-def description(ideology): 
+def description(ideology: str) -> str: 
     descriptions = {
         "Classical Liberalism": (
             "Classical Liberalism values personal freedom above all. It believes in private property, limited government, "
@@ -52,24 +55,35 @@ def description(ideology):
     return descriptions.get(ideology)
 
 
-def nearest_neighbor(answers, ideology_vectors):
+def nearest_neighbor(answers: List[int], ideology_vectors: Dict[str, List[int]], question_weights: List[int], alpha: float = 0.5) -> Tuple[str, float]:
     """
     Finds the ideology whose vector is nearest to the user's answers
-    using Euclidean distance.
+    using an hybrid score based on Euclidean nd cosine similarity with a blend of alpha.
+
+    alpha is 1 -> cosine similarity only
+    alpha is 0 -> euclidean only
     """
-    nearest = None
-    min_dist = float('inf')
+
+    best = None
+    best_score = -1
 
     for ideology, vector in ideology_vectors.items():
         # Euclidean distance
-        dist = math.sqrt(sum((a - v)**2 for a, v in zip(answers, vector)))
-        if dist < min_dist:
-            min_dist = dist
-            nearest = ideology
+        dist = math.sqrt(sum(w * (a - v)**2 for a, v, w in zip(answers, vector, question_weights)))
+        # Euclidean similarity
+        eu_sim = 1 / (dist + 1)
 
-    return nearest, min_dist
+        cos_sim = cosine_similarity(answers, vector)
 
-def cosine_similarity(vec1, vec2):
+        score = alpha * cos_sim + (1 - alpha) * eu_sim
+
+        if score > best_score:
+            best_score = score
+            best = ideology
+
+    return best, best_score
+
+def cosine_similarity(vec1: List[int], vec2: List[int]) -> float:
     dot_product = sum(a * b for a, b in zip(vec1, vec2))
     magnitude1 = math.sqrt(sum(a ** 2 for a in vec1))
     magnitude2 = math.sqrt(sum(b ** 2 for b in vec2))
@@ -77,17 +91,8 @@ def cosine_similarity(vec1, vec2):
         return 0
     return dot_product / (magnitude1 * magnitude2)
 
-def nearest_neighbor_cosine(answers, ideology_vectors):
-    nearest = None
-    max_similarity = -1
-    for ideology, vector in ideology_vectors.items():
-        similarity = cosine_similarity(answers, vector)
-        if similarity > max_similarity:
-            max_similarity = similarity
-            nearest = ideology
-    return nearest, max_similarity
 
-def questions():
+def questions() -> List[str]:
     questions = [
         "Q1: The government should guarantee equal access to education and healthcare so everyone has a fair start in life.",
         "Q2: People should succeed or fail mostly based on their talent and effort, not their social background.",
@@ -122,11 +127,9 @@ def main():
                 print("Invalid input. Please enter a number.")
 
     ideology_vectors = calculate_scores(answers)
-    nearest, distance = nearest_neighbor(answers, ideology_vectors)
-    # Cosine similarity nearest neighbor
-    nn_cosine, similarity = nearest_neighbor_cosine(answers, ideology_vectors)
+    nearest, distance = nearest_neighbor(answers, ideology_vectors, question_weights)
 
-    print(f"\n>>> Your closest ideology (nearest neighbor) is: {nearest} + {nn_cosine} <<<")
+    print(f"\n>>> Your closest ideology (nearest neighbor) is: {nearest} + {distance} <<<")
 
 
 if __name__ == "__main__":
