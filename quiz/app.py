@@ -32,36 +32,19 @@ def submit_quiz():
         ideology_vectors = calculate_scores(answers)
         
         # Calculate nearest neighbors
-        euclidean_nearest, euclidean_distance = nearest_neighbor(answers, ideology_vectors, question_weights)
+        scores = nearest_neighbor(answers, ideology_vectors, question_weights)
         # cosine_nearest, cosine_similarity = nearest_neighbor_cosine(answers, ideology_vectors)
+        ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
         
-        # Determine results
-        # if euclidean_nearest == cosine_nearest:
-        results = [{
-            'ideology': euclidean_nearest,
-            'method': 'Both Euclidean Distance and Cosine Similarity',
-            'description' : description(euclidean_nearest),
-            'euclidean_distance': round(euclidean_distance, 3),
-            'cosine_similarity': None
-        }]
-        # else:
-        #     results = [
-        #         {
-        #             'ideology': euclidean_nearest,
-        #             'method': 'Euclidean Distance',
-        #             'description' : description(euclidean_nearest),
-        #             'euclidean_distance': round(euclidean_distance, 3),
-        #             'cosine_similarity': None
-        #         },
-        #         {
-        #             'ideology': cosine_nearest,
-        #             'method': 'Cosine Similarity',
-        #             'description' : description(cosine_nearest),
-        #             'cosine_similarity': round(cosine_similarity, 3),
-        #             'euclidean_distance': None
-        #         }
-        #     ]
-        
+        results = []
+        for ideology, score in ranked[:2]:
+            results.append({
+                'ideology': ideology,
+                'method': 'Both Euclidean Distance and Cosine Similarity',
+                'description' : description(ideology),
+                'score': f"{score:.1f}%",
+            })
+
         return jsonify({
             'success': True,
             'results': results,

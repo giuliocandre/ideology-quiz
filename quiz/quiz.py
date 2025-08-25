@@ -55,7 +55,7 @@ def description(ideology: str) -> str:
     return descriptions.get(ideology)
 
 
-def nearest_neighbor(answers: List[int], ideology_vectors: Dict[str, List[int]], question_weights: List[int], alpha: float = 0.5) -> Tuple[str, float]:
+def nearest_neighbor(answers: List[int], ideology_vectors: Dict[str, List[int]], question_weights: List[int], alpha: float = 0.5) -> Dict[str, float]:
     """
     Finds the ideology whose vector is nearest to the user's answers
     using an hybrid score based on Euclidean nd cosine similarity with a blend of alpha.
@@ -64,8 +64,7 @@ def nearest_neighbor(answers: List[int], ideology_vectors: Dict[str, List[int]],
     alpha is 0 -> euclidean only
     """
 
-    best = None
-    best_score = -1
+    scores = {}
 
     for ideology, vector in ideology_vectors.items():
         # Euclidean distance
@@ -77,11 +76,9 @@ def nearest_neighbor(answers: List[int], ideology_vectors: Dict[str, List[int]],
 
         score = alpha * cos_sim + (1 - alpha) * eu_sim
 
-        if score > best_score:
-            best_score = score
-            best = ideology
-
-    return best, best_score
+        scores[ideology] = score
+        
+    return scores
 
 def cosine_similarity(vec1: List[int], vec2: List[int]) -> float:
     dot_product = sum(a * b for a, b in zip(vec1, vec2))
@@ -127,10 +124,13 @@ def main():
                 print("Invalid input. Please enter a number.")
 
     ideology_vectors = calculate_scores(answers)
-    nearest, distance = nearest_neighbor(answers, ideology_vectors, question_weights)
+    scores = nearest_neighbor(answers, ideology_vectors, question_weights)
 
-    print(f"\n>>> Your closest ideology (nearest neighbor) is: {nearest} + {distance} <<<")
+    ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
+    print("\n>>> Your ideological profile <<<")
+    for ideology, score in ranked[:2]:
+        print(f"{ideology:25s}: {score:.1f}%")
 
 if __name__ == "__main__":
     main()
