@@ -305,7 +305,7 @@
                 {% for question in questions %}
                 {% set outer_index = loop.index %}
                 <div class="question">
-                    <div class="question-text">{{ question }}</div>
+                    <div class="question-text">Q{{loop.index}}: {{ question }}</div>
                     <div class="rating-container">
                         <div class="rating-labels">
                             <span>1 = Strongly Disagree</span>

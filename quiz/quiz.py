@@ -1,6 +1,7 @@
 # ideology_quiz_vector.py
 import math
 from typing import Dict, List, Tuple
+from random import shuffle
 
 question_weights = [5, 2, 2, 2, 4, 4, 3, 3, 4, 5]
 
@@ -91,17 +92,20 @@ def cosine_similarity(vec1: List[int], vec2: List[int]) -> float:
 
 def questions() -> List[str]:
     questions = [
-        "Q1: The government should guarantee equal access to education and healthcare so everyone has a fair start in life.",
-        "Q2: People should succeed or fail mostly based on their talent and effort, not their social background.",
-        "Q3: Even if inequality increases, it is acceptable as long as opportunities are open to everyone.",
-        "Q4: Free competition and private entrepreneurship are the best engines of innovation.",
-        "Q5: Public investment and state-led projects are essential for major innovation (e.g., healthcare, green technology).",
-        "Q6: The state should strongly intervene to protect common goods like the environment, even at the cost of limiting individual or corporate freedom.",
-        "Q7: Protecting individual freedom (speech, property, lifestyle choices) should be the government’s highest priority.",
-        "Q8: High wealth inequality is dangerous for democracy and society, even if the economy grows.",
-        "Q9: The state should provide broad welfare (pensions, unemployment aid, free healthcare) even if it requires high taxes.",
-        "Q10: Essential sectors (energy, education, transport) should be collectively owned rather than left to private companies."
+        "The government should guarantee equal access to education and healthcare so everyone has a fair start in life.",
+        "People should succeed or fail mostly based on their talent and effort, not their social background.",
+        "Even if inequality increases, it is acceptable as long as opportunities are open to everyone.",
+        "Free competition and private entrepreneurship are the best engines of innovation.",
+        "Public investment and state-led projects are essential for major innovation (e.g., healthcare, green technology).",
+        "The state should strongly intervene to protect common goods like the environment, even at the cost of limiting individual or corporate freedom.",
+        "Protecting individual freedom (speech, property, lifestyle choices) should be the government’s highest priority.",
+        "High wealth inequality is dangerous for democracy and society, even if the economy grows.",
+        "The state should provide broad welfare (pensions, unemployment aid, free healthcare) even if it requires high taxes.",
+        "Essential sectors (energy, education, transport) should be collectively owned rather than left to private companies."
     ]
+    
+    shuffle(questions)
+
     return questions
 
 def main():
