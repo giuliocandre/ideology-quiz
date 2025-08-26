@@ -110,6 +110,28 @@
             display: flex;
             justify-content: space-between;
             gap: 10px;
+            flex-wrap: nowrap;
+        }
+
+        /* Adjust on smaller screens */
+        @media (max-width: 480px) {
+            .rating-inputs {
+                gap: 5px;              /* tighter spacing */
+            }
+
+            .rating-option label {
+                width: 28px;           /* smaller circles */
+                height: 28px;
+                font-size: 0.8rem;
+            }
+
+            .rating-labels {
+                font-size: 0.75rem;    /* shrink "Strongly Disagree/Agree" text */
+            }
+
+            .rating-container {
+                padding: 10px;         /* reduce padding so row fits */
+            }
         }
 
         .rating-option {
