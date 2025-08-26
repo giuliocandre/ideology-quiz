@@ -28,6 +28,8 @@ def submit_quiz():
             except ValueError:
                 return jsonify({'error': f'Invalid answer format for question {i}'}), 400
         
+        answers = [ans for _, ans in sorted(answers, key=lambda x: x[0])]
+
         # Get ideology vectors
         ideology_vectors = calculate_scores(answers)
         

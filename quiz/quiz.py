@@ -90,22 +90,21 @@ def cosine_similarity(vec1: List[int], vec2: List[int]) -> float:
     return dot_product / (magnitude1 * magnitude2)
 
 
-def questions() -> List[str]:
-    questions = [
-        "The government should guarantee equal access to education and healthcare so everyone has a fair start in life.",
-        "People should succeed or fail mostly based on their talent and effort, not their social background.",
-        "Even if inequality increases, it is acceptable as long as opportunities are open to everyone.",
-        "Free competition and private entrepreneurship are the best engines of innovation.",
-        "Public investment and state-led projects are essential for major innovation (e.g., healthcare, green technology).",
-        "The state should strongly intervene to protect common goods like the environment, even at the cost of limiting individual or corporate freedom.",
-        "Protecting individual freedom (speech, property, lifestyle choices) should be the government’s highest priority.",
-        "High wealth inequality is dangerous for democracy and society, even if the economy grows.",
-        "The state should provide broad welfare (pensions, unemployment aid, free healthcare) even if it requires high taxes.",
-        "Essential sectors (energy, education, transport) should be collectively owned rather than left to private companies."
+def questions() -> List[Tuple[int, str]]:
+    questions: List[Question] = [
+        (1, "The government should guarantee equal access to education and healthcare so everyone has a fair start in life."),
+        (2, "People should succeed or fail mostly based on their talent and effort, not their social background."),
+        (3, "Even if inequality increases, it is acceptable as long as opportunities are open to everyone."),
+        (4, "Free competition and private entrepreneurship are the best engines of innovation."),
+        (5, "Public investment and state-led projects are essential for major innovation (e.g., healthcare, green technology)."),
+        (6, "The state should strongly intervene to protect common goods like the environment, even at the cost of limiting individual or corporate freedom."),
+        (7, "Protecting individual freedom (speech, property, lifestyle choices) should be the government’s highest priority."),
+        (8, "High wealth inequality is dangerous for democracy and society, even if the economy grows."),
+        (9, "The state should provide broad welfare (pensions, unemployment aid, free healthcare) even if it requires high taxes."),
+        (10, "Essential sectors (energy, education, transport) should be collectively owned rather than left to private companies.")
     ]
     
     shuffle(questions)
-
     return questions
 
 def main():
@@ -115,18 +114,19 @@ def main():
     answers = []
 
 
-    for q in questions():
+    for idx, q in questions():
         while True:
             try:
                 ans = int(input(f"{q}\nYour answer (0-5): "))
                 if 0 <= ans <= 5:
-                    answers.append(ans)
+                    answers.append((idx, ans))
                     break
                 else:
                     print("Please enter a number between 0 and 5.")
             except ValueError:
                 print("Invalid input. Please enter a number.")
 
+    answers = [ans for _, ans in sorted(answers, key=lambda x: x[0])]
     ideology_vectors = calculate_scores(answers)
     scores = nearest_neighbor(answers, ideology_vectors, question_weights)
 

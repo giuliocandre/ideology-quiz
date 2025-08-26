@@ -302,8 +302,8 @@
 
         <div class="quiz-container">
             <form id="quizForm">
-                {% for question in questions %}
-                {% set outer_index = loop.index %}
+                {% for idx, question in questions %}
+                {% set outer_index = idx %}
                 <div class="question">
                     <div class="question-text">Q{{loop.index}}: {{ question }}</div>
                     <div class="rating-container">
